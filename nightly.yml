@@ -1,0 +1,38 @@
+# Phase 7: Nightly Regression Testing
+# This runs every night at midnight to catch regressions early.
+
+name: Nightly Regression Tests
+
+on:
+  schedule:
+    - cron: '0 0 * * *'         # Every night at midnight UTC
+  push:
+    branches: [ main ]          # Also run on every push to main
+  workflow_dispatch:             # Allow manual trigger
+
+jobs:
+  regression-test:
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Install dependencies
+        run: pip install -r requirements.txt
+
+      - name: Run regression suite
+        run: |
+          robot --outputdir reports --include regression tests/
+
+      - name: Upload test reports
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: test-reports
+          path: reports/
