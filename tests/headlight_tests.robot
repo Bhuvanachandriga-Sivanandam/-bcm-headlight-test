@@ -13,7 +13,7 @@ ${REQ_ID}         REQ-BCM-002
 TC-001: Headlights Turn ON With Ignition ON
     [Documentation]    GIVEN ignition is ON, WHEN headlights requested, THEN headlights activate.
     [Tags]    positive    safety_critical    regression    ${REQ_ID}
-    ${bcm}=    Evaluate    __import__('sys').path.insert(0,'src') or __import__('bcm').BodyControlModule()
+    ${bcm}=    Evaluate    __import__('bcm').BodyControlModule()
     # --- Arrange ---
     ${ign}=    Call Method    ${bcm}    turn_ignition_on
     Should Be True    ${ign}    Ignition should turn ON
